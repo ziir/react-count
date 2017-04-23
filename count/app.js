@@ -22,7 +22,6 @@ const View = ({value, add, delete1}) => (
 		<button onClick = {add}>+</button>
 		<button onClick = {delete1}>-</button>
 	</div>
-
 );
 
 const listen = () => {
@@ -30,7 +29,6 @@ const listen = () => {
 		value = {store.getState()}
 		add = {() => store.dispatch({type: "add"})}
 		delete1 = {() => store.dispatch({type: "delete1"})}
-
 		/>,document.getElementById("root"));
 };
 
