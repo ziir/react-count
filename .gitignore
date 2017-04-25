@@ -1,1 +1,5 @@
 node_modules
+./count/node_modules
+./data-binding/node_modules
+./todolist-React/node_modules
+./todolist-Redux/node_modules
