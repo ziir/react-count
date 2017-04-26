@@ -1,0 +1,50 @@
+body{
+	background-color: #f1f1f1;
+	margin: auto;
+}
+
+#root{
+	margin-left:20%;
+	margin-top:20%;
+}
+
+#button{
+	margin-left: 10px;
+    background: #0e9c66;
+    border: 1px solid green;
+    width: 100px;
+    height: 54px;
+    border-radius: 7px;
+    color: white;
+    cursor: pointer; 
+    font-size: 16px;
+    &:hover{
+    	opacity: 0.8;
+    }
+}
+
+
+#text{
+	width: 500px;
+    height: 30px;
+    padding: 12px;
+    font-size: 20px;
+    &:focus{
+    	outline:none;
+    }
+}
+
+a{
+	font-size: 20px;
+    margin: 10px;
+    text-decoration: underline;
+    color: #0e9c66;
+    cursor: pointer;
+}
+
+#show-div{
+	margin-top:20px;
+}
+
+li{
+}

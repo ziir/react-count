@@ -2,21 +2,31 @@ import React from 'react';
 import ReactDOM from 'react-dom'
 import {createStore} from 'redux'
 
-var initialState = {"lists":[]};
+require('./main.scss');
+
+var initialState = {"todoLists":[], "doneLists":[], "showLists": []};
 const reducer = (state = initialState, action) => {
 	switch (action.type){
 		case 'add':
-			var lists = state.lists;
+			var lists = state.todoLists;
 			lists.push(action.text);
-			state.lists = lists;
-			console.log(state.lists);
+			state.todolists = lists;
+			state.showLists = state.todoLists;
 			return state;
 		case 'delete':
-			console.log("delete");
-			state.lists = state.lists.filter((list)=>{
+			state.todoLists = state.todoLists.filter((list)=>{
 				return list != action.text;
 			});
-			console.log(state.lists);
+			state.showLists = state.todoLists;
+			var lists=state.doneLists;
+			lists.push(action.text);
+			state.doneLists =  lists;
+			return state;
+		case 'showTodo':
+			state.showLists = state.todoLists;
+			return state;
+		case 'showDone':
+			state.showLists = state.doneLists;
 			return state;
 		default:
 			return state;		
@@ -30,8 +40,8 @@ const Add = ()=>{
 
 	return (
 		<div>
-			<input type="text" ref={(input)=>{text=input;}}/>
-			<input type="button" value="Add" onClick={()=>{
+			<input type="text" id="text" ref={(input)=>{text=input;}}/>
+			<input type="button" id="button" value="Add" onClick={()=>{
 				store.dispatch({type:"add", text: text.value});
 				text.value = "";
 			}}/>
@@ -42,17 +52,30 @@ const Add = ()=>{
 const Lists = ()=>(
 	<div>
 		{	
-			store.getState().lists.map((list) => (
-				<div onClick={()=>{
-				store.dispatch({type:"delete", text: list});
-				}}>{list}</div>
-		))}
+			store.getState().showLists.map((list) => (
+				<ul onClick={()=>{
+					store.dispatch({type:"delete", text: list});
+				}}><li>{list}</li></ul>
+			))
+		}
+	</div>
+);
+
+const Show = ()=>(
+	<div id="show-div">
+		<a  onClick={()=>{
+				store.dispatch({type:"showTodo"});
+			}}>Todo   </a>
+		<a  onClick={()=>{
+				store.dispatch({type:"showDone"});
+			}}>Done</a>
 	</div>
 );
 
 const View = ()=>(
 	<div>
 		<Add/>
+		<Show/>
 		<Lists/>
 	</div>
 );
