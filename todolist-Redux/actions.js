@@ -1,3 +1,3 @@
-export function addTodo(text){
-	return {type: "add", text};
+export function addTodo(text) {
+  return { type: "add", text };
 }

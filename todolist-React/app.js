@@ -1,111 +1,112 @@
-import React from 'react';
-import ReactDOM from 'react-dom'
+import React from "react";
+import ReactDOM from "react-dom";
 
+class Add extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
+  addItem(text) {
+    this.props.addTodo(text);
+  }
 
-class Add extends React.Component{
+  handleSubmit(evt) {
+    evt.preventDefault();
 
-	constructor(props){
-		super(props);
-		this.state={value:""};
-		this.addItem = this.addItem.bind(this);
-		this.updateItem = this.updateItem.bind(this);
-	}
+    const form = evt.target;
+    const input = form.querySelector('[name="text"]');
+    const text = input.value;
 
-	addItem(e){
-		this.props.addtodo(this.state.value);
-		this.setState({
-			value:""
-		});
-	}
+    this.addItem(text);
 
-	updateItem(e){
-		this.setState({
-			value: e.target.value
-		});
-	}
+    input.value = "";
+  }
 
-	render() {
-	    return (
-	      <div>
-	      	<form>
-	      		<input type="text" placeholder="add item" value={this.state.value} onChange={this.updateItem}/>
-		    	<input type="button" value="add" onClick={this.addItem}/>
-	      	</form>
-	      </div>
-	    );
-  	}
+  render() {
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <input type="text" placeholder="add item" name="text" />
+          <button type="submit">
+            add
+          </button>
+        </form>
+      </div>
+    );
+  }
 }
 
-class List extends React.Component{
+class Item extends React.Component {
+  constructor(props) {
+    super(props);
+    this.removeItem = this.removeItem.bind(this);
+  }
 
-	constructor(props){
-		super(props);
-		this.removeItem = this.removeItem.bind(this);
-	}
+  removeItem() {
+    this.props.remove(this.props.value);
+  }
 
-	removeItem(){
-		this.props.remove(this.props.value);
-	}
-
-	render() {
-	    return (
-	      	<div onClick = {this.removeItem}>
-				{this.props.value}
-			</div>
-	    );
-  	}
+  render() {
+    return (
+      <li key={this.props.key} onClick={this.removeItem}>
+        {this.props.value}
+      </li>
+    );
+  }
 }
 
-class Lists extends React.Component{
+class List extends React.Component {
+  constructor(props) {
+    super(props);
 
-	constructor(props){
-		super(props);
-	}
+    this.renderItem = this.renderItem.bind(this);
+  }
 
-	render() {
-	    return (
-	      <div>
-	      	{this.props.values.map((value) => {
-	      		return <List value={value} remove={this.props.remove}/>
-	      	})}
-	      </div>
-	    );
-  	}
+  renderItem(value) {
+    return <Item key={value} value={value} remove={this.props.remove} />;
+  }
+
+  render() {
+    return (
+      <ul>
+        {this.props.values.map(this.renderItem)}
+      </ul>
+    );
+  }
 }
 
-class View extends React.Component{
+class View extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      values: []
+    };
 
-	constructor(props){
-		super(props);
-		this.state = {values:[], add:""};
-		this.addtodo= this.addtodo.bind(this);
-		this.removeItem= this.removeItem.bind(this);
-	}
+    this.addTodo = this.addTodo.bind(this);
+    this.removeItem = this.removeItem.bind(this);
+  }
 
-	addtodo(value){
-		this.setState({
-			values : this.state.values.concat(value)
-		});
-	}
+  addTodo(value) {
+    this.setState(previousState => ({
+      values: [...new Set(previousState.values.concat([value]))]
+    }));
+  }
 
-	removeItem(value){
-		 // Filter all todos except the one to be removed
-	    const remainder = this.state.values.filter((v) => {
-	      if(v !== value) return v;
-	    });
-	    // Update state with filter
-	    this.setState({values: remainder});
-	}	
+  removeItem(value) {
+    this.setState(previousState => ({
+      values: previousState.values.filter(val => val !== value)
+    }));
+  }
 
-	render() {
-	    return (
-	      <div>
-	      	<Add addtodo={this.addtodo}/>
-	      	<Lists values={this.state.values} remove = {this.removeItem}/>
-	      </div>
-	    );
-  	}
+  render() {
+    return (
+      <div>
+        <Add addTodo={this.addTodo} />
+        <List values={this.state.values} remove={this.removeItem} />
+      </div>
+    );
+  }
 }
 
-ReactDOM.render(<View/>,document.getElementById("root"));
+ReactDOM.render(<View />, document.getElementById("root"));
